@@ -11,14 +11,25 @@ import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import javax.swing.JTextPane;
+import java.awt.SystemColor;
 
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = -1175581035221039000L;
 	private JPanel contentPane, traducirPanel, agregarPanel, eliminarPanel;
-	private JTextField txtTraducir;
 	private JTextField textField;
 	private JTextField textField_1;
+	private JLabel traducir_label;
+	private JTextField input;
+	private JButton traducir_button;
+	private JTextPane output;
+	private JButton agregar_button;
+	private JButton eliminar_button;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -43,15 +54,7 @@ public class Main extends JFrame {
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
 		
-		traducirPanel = new JPanel();
-		traducirPanel.setBounds(0, 0, 694, 549);
-		contentPane.add(traducirPanel);
-		traducirPanel.setLayout(null);
-		
-		txtTraducir = new JTextField();
-		txtTraducir.setText("Traducir");
-		txtTraducir.setBounds(250, 227, 86, 20);
-		traducirPanel.add(txtTraducir);
+		crearTraducirPanel();
 		
 		agregarPanel = new JPanel();
 		agregarPanel.setBounds(0, 0, 694, 549);
@@ -80,6 +83,50 @@ public class Main extends JFrame {
 		
 	}
 	
+	private void crearTraducirPanel() {
+		traducirPanel = new JPanel();
+		traducirPanel.setBounds(0, 0, 694, 549);
+		traducirPanel.setLayout(null);
+		
+		traducir_label = new JLabel("Traducir: ");
+		traducir_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		traducir_label.setBounds(10, 19, 92, 20);
+		traducirPanel.add(traducir_label);
+		
+		input = new JTextField();
+		input.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		input.setHorizontalAlignment(SwingConstants.CENTER);
+		input.setBounds(107, 11, 361, 45);
+		traducirPanel.add(input);
+		input.setColumns(10);
+		
+		traducir_button = new JButton("Traducir");
+		traducir_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		traducir_button.setBounds(514, 11, 160, 45);
+		traducirPanel.add(traducir_button);
+		
+		output = new JTextPane();
+		output.setFont(new Font("Arial", Font.BOLD, 25));
+		output.setBackground(SystemColor.control);
+		output.setEditable(false);
+		output.setBounds(227, 83, 447, 400);
+		traducirPanel.add(output);
+		
+		agregar_button = new JButton("Agregar");
+		agregar_button.addActionListener(e -> setVisibleAgregarPanel());
+		agregar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		agregar_button.setBounds(10, 483, 160, 45);
+		traducirPanel.add(agregar_button);
+		
+		eliminar_button = new JButton("Eliminar");
+		eliminar_button.addActionListener(e -> setVisibleEliminarPanel());
+		eliminar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		eliminar_button.setBounds(514, 483, 160, 45);
+		traducirPanel.add(eliminar_button);
+		
+		contentPane.add(traducirPanel);
+	}
+
 	private JMenuBar createJMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
@@ -90,40 +137,40 @@ public class Main extends JFrame {
 		JMenuItem traducirItem = new JMenuItem("Traducir");
 		traducirItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getContentPane().setVisible(false);
-				setContentPane(traducirPanel);
-				traducirPanel.setVisible(true);
+				setVisibleTraducirPanel();
 			}
 		});
 		mnMenu.add(traducirItem);
 		
 		JMenuItem agregarItem = new JMenuItem("Agregar");
-		agregarItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				getContentPane().setVisible(false);
-				setContentPane(agregarPanel);
-				agregarPanel.setVisible(true);
-			}
-		});
+		agregarItem.addActionListener(e -> setVisibleAgregarPanel());
 		mnMenu.add(agregarItem);
 		
 		JMenuItem eliminarItem = new JMenuItem("Eliminar");
-		eliminarItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				getContentPane().setVisible(false);
-				setContentPane(eliminarPanel);
-				eliminarPanel.setVisible(true);
-			}
-		});
+		eliminarItem.addActionListener(e -> setVisibleEliminarPanel());
 		mnMenu.add(eliminarItem);
 		
 		JMenuItem salirItem = new JMenuItem("Salir");
-		salirItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
-			}
-		});
+		salirItem.addActionListener(e -> System.exit(0));
 		mnMenu.add(salirItem);
 		return menuBar;
+	}
+	
+	private void setVisibleTraducirPanel() {
+		getContentPane().setVisible(false);
+		setContentPane(traducirPanel);
+		traducirPanel.setVisible(true);
+	}
+	
+	private void setVisibleAgregarPanel() {
+		getContentPane().setVisible(false);
+		setContentPane(agregarPanel);
+		agregarPanel.setVisible(true);
+	}
+	
+	private void setVisibleEliminarPanel() {
+		getContentPane().setVisible(false);
+		setContentPane(eliminarPanel);
+		eliminarPanel.setVisible(true);
 	}
 }
