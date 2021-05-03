@@ -22,12 +22,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
 
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = -1175581035221039000L;
 	private JPanel contentPane, traducirPanel, agregarPanel, eliminarPanel;
-	private JTextField textField_1;
 	private JLabel traducir_label;
 	private JTextField input;
 	private JTextPane output, input_jap, input_esp;
@@ -58,19 +60,7 @@ public class Main extends JFrame {
 		
 		crearTraducirPanel();
 		crearAgregarPanel();
-		
-		
-		
-		eliminarPanel = new JPanel();
-		eliminarPanel.setLayout(null);
-		eliminarPanel.setBounds(0, 0, 694, 549);
-		eliminarPanel.setVisible(false);
-		contentPane.add(eliminarPanel);
-		
-		textField_1 = new JTextField();
-		textField_1.setText("Eliminar");
-		textField_1.setBounds(250, 227, 86, 20);
-		eliminarPanel.add(textField_1);
+		crearEliminarPanel();
 		
 		setJMenuBar(createJMenuBar());
 		
@@ -196,31 +186,72 @@ public class Main extends JFrame {
 		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
 		atras_button.setBounds(10, 485, 160, 45);
 		agregarPanel.add(atras_button);
+	}
+	
+	private void crearEliminarPanel() {
+		eliminarPanel = new JPanel();
+		eliminarPanel.setLayout(null);
+		eliminarPanel.setBounds(0, 0, 694, 549);
+		eliminarPanel.setVisible(false);
+		contentPane.add(eliminarPanel);
 		
+		JList lista_esp = new JList();
+		lista_esp.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lista_esp.setBounds(0, 0, 1, 1);
+		eliminarPanel.add(lista_esp);
+		
+		JList lista_jap = new JList();
+		lista_jap.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lista_jap.setBounds(432, 11, 252, 463);
+		eliminarPanel.add(lista_jap);
+		
+		JButton eliminar_palabra_button = new JButton("ELIMINAR");
+		eliminar_palabra_button.setEnabled(false);
+		eliminar_palabra_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		eliminar_palabra_button.setBounds(524, 485, 160, 45);
+		eliminarPanel.add(eliminar_palabra_button);
+		
+		JScrollPane scrollPane = new JScrollPane(lista_esp);
+		scrollPane.setBorder(null);
+		scrollPane.setBounds(10, 11, 252, 463);
+		eliminarPanel.add(scrollPane);
+		
+		JButton atras_button = new JButton("ATRAS");
+		atras_button.setForeground(Color.WHITE);
+		atras_button.setBackground(Color.RED);
+		atras_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
+		atras_button.setBounds(10, 485, 160, 45);
+		eliminarPanel.add(atras_button);
+		
+		JButton switch_button = new JButton("<-->");
+		switch_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		switch_button.setBounds(267, 202, 160, 45);
+		eliminarPanel.add(switch_button);
 	}
 
 	private JMenuBar createJMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorderPainted(false);
 		menuBar.setBounds(5, 5, 674, 22);
-		JMenu mnMenu = new JMenu("Menu");
-		menuBar.add(mnMenu);
+		JMenu menu = new JMenu("Menu");
+		menuBar.add(menu);
 		
 		JMenuItem traducirItem = new JMenuItem("Traducir");
 		traducirItem.addActionListener(e -> setVisiblePanel(traducirPanel));
-		mnMenu.add(traducirItem);
+		menu.add(traducirItem);
 		
 		JMenuItem agregarItem = new JMenuItem("Agregar");
 		agregarItem.addActionListener(e -> setVisiblePanel(agregarPanel));
-		mnMenu.add(agregarItem);
+		menu.add(agregarItem);
 		
 		JMenuItem eliminarItem = new JMenuItem("Eliminar");
 		eliminarItem.addActionListener(e -> setVisiblePanel(eliminarPanel));
-		mnMenu.add(eliminarItem);
+		menu.add(eliminarItem);
 		
 		JMenuItem salirItem = new JMenuItem("Salir");
 		salirItem.addActionListener(e -> System.exit(0));
-		mnMenu.add(salirItem);
+		menu.add(salirItem);
 		return menuBar;
 	}
 	
@@ -228,6 +259,5 @@ public class Main extends JFrame {
 		getContentPane().setVisible(false);
 		setContentPane(panel);
 		panel.setVisible(true);
-		
 	}
 }
