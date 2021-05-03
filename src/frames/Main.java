@@ -5,6 +5,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.FileController;
+import exceptions.PalabraNoEncontradaException;
+
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -12,15 +16,17 @@ import javax.swing.JTextField;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.AbstractAction;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
 import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -82,7 +88,7 @@ public class Main extends JFrame {
 		
 		JTextPane output = new JTextPane();
 		output.setFont(new Font("Arial", Font.BOLD, 25));
-		output.setBackground(SystemColor.control);
+		output.setBackground(UIManager.getColor("CheckBox.background"));
 		output.setEditable(false);
 		output.setBounds(227, 83, 447, 400);
 		traducirPanel.add(output);
@@ -98,6 +104,40 @@ public class Main extends JFrame {
 		eliminar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		eliminar_button.setBounds(524, 483, 160, 45);
 		traducirPanel.add(eliminar_button);
+		
+		traducir_button.addActionListener(e -> {
+			DefaultListModel<String> list;
+			try {
+				list = FileController.leer(input.getText());
+				String traduccion = list.firstElement();
+				output.setForeground(Color.BLACK);
+				if (list.size() > 1) {
+					traduccion = "1. " + traduccion;
+					int i = 1;
+					for (i = 1; i < list.size() && i < 10; i++) {
+						traduccion += "\n" + (i+1) + ". " + list.getElementAt(i);
+					}
+					if (i < list.size()) {
+						traduccion += "\n(" + (list.size()-i) +" traduccion/es mas)";
+					}
+				}
+				output.setText(traduccion);
+			} catch (PalabraNoEncontradaException ex) {
+				output.setText("Palabra no encontrada");
+				output.setForeground(Color.RED);
+			} catch (FileNotFoundException ex1) {
+				ex1.printStackTrace();
+			}
+		});
+		
+		input.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					traducir_button.doClick();
+				}
+			}
+		});
 		
 		contentPane.add(traducirPanel);
 	}
