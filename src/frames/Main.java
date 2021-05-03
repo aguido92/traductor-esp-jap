@@ -30,6 +30,9 @@ import java.io.FileNotFoundException;
 import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Main extends JFrame {
 
@@ -200,6 +203,12 @@ public class Main extends JFrame {
 				}
 			}
 		});
+		input_esp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				input_esp.setText(input_esp.getText().trim());
+			}
+		});
 		input_jap.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new ChangeFocusInputAction(input_esp));
 		input_jap.addKeyListener(new KeyAdapter() {
 			@Override
@@ -207,6 +216,32 @@ public class Main extends JFrame {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					agregar_button.doClick();
 				}
+			}
+		});
+		input_jap.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				input_jap.setText(input_jap.getText().trim());
+			}
+		});
+		input_jap.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (input_jap.getText().equals("\r\n")) {
+					input_jap.setText("");
+				}
+			}
+		});
+		agregar_button.addActionListener(e -> {
+			if (input_esp.getText().equals("") || input_jap.getText().equals("")) {
+				respuesta.setText("Campo/s vacio/s");
+				respuesta.setForeground(Color.RED);
+			} else {
+				FileController.escribir(input_jap.getText().trim(), input_esp.getText().trim());
+				respuesta.setText("Agregado exitosamente!");
+				respuesta.setForeground(Color.BLUE);
+				input_esp.setText("");
+				input_jap.setText("");
 			}
 		});
 	}
