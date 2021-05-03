@@ -24,16 +24,11 @@ import java.awt.event.KeyEvent;
 import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
 
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = -1175581035221039000L;
 	private JPanel contentPane, traducirPanel, agregarPanel, eliminarPanel;
-	private JLabel traducir_label;
-	private JTextField input;
-	private JTextPane output, input_jap, input_esp;
-	private JButton traducir_button, agregar_button, eliminar_button;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -61,9 +56,7 @@ public class Main extends JFrame {
 		crearTraducirPanel();
 		crearAgregarPanel();
 		crearEliminarPanel();
-		
 		setJMenuBar(createJMenuBar());
-		
 	}
 	
 	private void crearTraducirPanel() {
@@ -71,40 +64,39 @@ public class Main extends JFrame {
 		traducirPanel.setBounds(0, 0, 694, 549);
 		traducirPanel.setLayout(null);
 		
-		traducir_label = new JLabel("Traducir: ");
+		JLabel traducir_label = new JLabel("Traducir: ");
 		traducir_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		traducir_label.setBounds(10, 19, 92, 20);
 		traducirPanel.add(traducir_label);
 		
-		input = new JTextField();
+		JTextField input = new JTextField();
 		input.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		input.setHorizontalAlignment(SwingConstants.CENTER);
 		input.setBounds(107, 11, 361, 45);
 		traducirPanel.add(input);
-		input.setColumns(10);
 		
-		traducir_button = new JButton("Traducir");
+		JButton traducir_button = new JButton("Traducir");
 		traducir_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		traducir_button.setBounds(514, 11, 160, 45);
+		traducir_button.setBounds(524, 11, 160, 45);
 		traducirPanel.add(traducir_button);
 		
-		output = new JTextPane();
+		JTextPane output = new JTextPane();
 		output.setFont(new Font("Arial", Font.BOLD, 25));
 		output.setBackground(SystemColor.control);
 		output.setEditable(false);
 		output.setBounds(227, 83, 447, 400);
 		traducirPanel.add(output);
 		
-		agregar_button = new JButton("Agregar");
+		JButton agregar_button = new JButton("Agregar");
 		agregar_button.addActionListener(e -> setVisiblePanel(agregarPanel));
 		agregar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		agregar_button.setBounds(10, 483, 160, 45);
 		traducirPanel.add(agregar_button);
 		
-		eliminar_button = new JButton("Eliminar");
+		JButton eliminar_button = new JButton("Eliminar");
 		eliminar_button.addActionListener(e -> setVisiblePanel(eliminarPanel));
 		eliminar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		eliminar_button.setBounds(514, 483, 160, 45);
+		eliminar_button.setBounds(524, 483, 160, 45);
 		traducirPanel.add(eliminar_button);
 		
 		contentPane.add(traducirPanel);
@@ -124,22 +116,8 @@ public class Main extends JFrame {
 		espanol_label.setBounds(10, 58, 327, 26);
 		agregarPanel.add(espanol_label);
 		
-		input_esp = new JTextPane();
+		JTextPane input_esp = new JTextPane();
 		input_esp.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		input_esp.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					agregar_button.doClick();
-				}
-			}
-		});
-		input_esp.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				input_jap.requestFocus();
-			}
-		});
 		input_esp.setBounds(0, 95, 342, 267);
 		agregarPanel.add(input_esp);
 		
@@ -149,21 +127,7 @@ public class Main extends JFrame {
 		japones_label.setBounds(347, 58, 327, 26);
 		agregarPanel.add(japones_label);
 		
-		input_jap = new JTextPane();
-		input_jap.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					agregar_button.doClick();
-				}
-			}
-		});
-		input_jap.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				input_esp.requestFocus();
-			}
-		});
+		JTextPane input_jap = new JTextPane();
 		input_jap.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		input_jap.setBounds(352, 95, 342, 267);
 		agregarPanel.add(input_jap);
@@ -174,10 +138,10 @@ public class Main extends JFrame {
 		respuesta.setBounds(10, 388, 664, 80);
 		agregarPanel.add(respuesta);
 		
-		JButton agregar_palabra_button = new JButton("AGREGAR");
-		agregar_palabra_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		agregar_palabra_button.setBounds(524, 485, 160, 45);
-		agregarPanel.add(agregar_palabra_button);
+		JButton agregar_button = new JButton("AGREGAR");
+		agregar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		agregar_button.setBounds(524, 485, 160, 45);
+		agregarPanel.add(agregar_button);
 		
 		JButton atras_button = new JButton("ATRAS");
 		atras_button.setForeground(Color.WHITE);
@@ -186,6 +150,25 @@ public class Main extends JFrame {
 		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
 		atras_button.setBounds(10, 485, 160, 45);
 		agregarPanel.add(atras_button);
+		
+		input_esp.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new ChangeFocusInputAction(input_jap));
+		input_esp.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					agregar_button.doClick();
+				}
+			}
+		});
+		input_jap.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new ChangeFocusInputAction(input_esp));
+		input_jap.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					agregar_button.doClick();
+				}
+			}
+		});
 	}
 	
 	private void crearEliminarPanel() {
@@ -259,5 +242,22 @@ public class Main extends JFrame {
 		getContentPane().setVisible(false);
 		setContentPane(panel);
 		panel.setVisible(true);
+	}
+	
+	private class ChangeFocusInputAction extends AbstractAction {
+		private static final long serialVersionUID = -5219955235297262325L;
+
+		private JTextPane textPane;
+		
+		public ChangeFocusInputAction(JTextPane textPane) {
+			super();
+			this.textPane = textPane;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			textPane.requestFocus();
+		}
+		
 	}
 }
