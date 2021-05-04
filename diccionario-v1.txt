@@ -14,3 +14,4 @@ sasas;Hola
 アルゼンチン;Argentina
 JapRaul;Raul
 Rauljap2;Raul
+Puto en japones;Chyvo

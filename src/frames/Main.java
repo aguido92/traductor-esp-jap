@@ -31,6 +31,8 @@ import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -198,17 +200,24 @@ public class Main extends JFrame {
 		input_esp.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				input_esp.setText(input_esp.getText().replace("\n", ""));
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					agregar_button.doClick();
 				}
 			}
 		});
-		input_esp.addMouseListener(new MouseAdapter() {
+		input_esp.addFocusListener(new FocusListener() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				input_esp.setText(input_esp.getText().trim());
+			public void focusLost(FocusEvent e) {
+				input_esp.setText(input_esp.getText().replace("\r\n", ""));
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				input_esp.setText(input_esp.getText().replace("\r\n", ""));
 			}
 		});
+		
 		input_jap.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new ChangeFocusInputAction(input_esp));
 		input_jap.addKeyListener(new KeyAdapter() {
 			@Override
@@ -221,7 +230,9 @@ public class Main extends JFrame {
 		input_jap.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				input_jap.setText(input_jap.getText().trim());
+				if (input_jap.getText().equals("\r\n")) {
+					input_jap.setText(input_jap.getText().trim());
+				}
 			}
 		});
 		input_jap.addMouseListener(new MouseAdapter() {
