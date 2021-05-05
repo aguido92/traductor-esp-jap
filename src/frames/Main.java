@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import controller.FileController;
 import exceptions.PalabraNoEncontradaException;
@@ -30,7 +32,6 @@ import java.io.FileNotFoundException;
 import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
@@ -39,7 +40,9 @@ import java.awt.event.MouseEvent;
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = -1175581035221039000L;
+
 	private JPanel contentPane, traducirPanel, agregarPanel, eliminarPanel;
+	private Boolean esp_jap = true;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -264,25 +267,26 @@ public class Main extends JFrame {
 		eliminarPanel.setVisible(false);
 		contentPane.add(eliminarPanel);
 		
-		JList lista_esp = new JList();
+		JList<String> lista_esp = new JList<String>();
 		lista_esp.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		lista_esp.setBounds(0, 0, 1, 1);
+		lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
 		eliminarPanel.add(lista_esp);
 		
-		JList lista_jap = new JList();
+		JList<String> lista_jap = new JList<String>();
 		lista_jap.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		lista_jap.setBounds(432, 11, 252, 463);
+		lista_jap.setBounds(432, 81, 252, 393);
 		eliminarPanel.add(lista_jap);
 		
-		JButton eliminar_palabra_button = new JButton("ELIMINAR");
-		eliminar_palabra_button.setEnabled(false);
-		eliminar_palabra_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		eliminar_palabra_button.setBounds(524, 485, 160, 45);
-		eliminarPanel.add(eliminar_palabra_button);
+		JButton eliminar_button = new JButton("ELIMINAR");
+		eliminar_button.setEnabled(false);
+		eliminar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		eliminar_button.setBounds(524, 485, 160, 45);
+		eliminarPanel.add(eliminar_button);
 		
 		JScrollPane scrollPane = new JScrollPane(lista_esp);
 		scrollPane.setBorder(null);
-		scrollPane.setBounds(10, 11, 252, 463);
+		scrollPane.setBounds(10, 81, 252, 393);
 		eliminarPanel.add(scrollPane);
 		
 		JButton atras_button = new JButton("ATRAS");
@@ -297,6 +301,59 @@ public class Main extends JFrame {
 		switch_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		switch_button.setBounds(267, 202, 160, 45);
 		eliminarPanel.add(switch_button);
+		
+		JLabel espanol_label = new JLabel("Español");
+		espanol_label.setHorizontalAlignment(SwingConstants.CENTER);
+		espanol_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		espanol_label.setBounds(10, 11, 252, 70);
+		eliminarPanel.add(espanol_label);
+		
+		JLabel japones_label = new JLabel("Japones");
+		japones_label.setHorizontalAlignment(SwingConstants.CENTER);
+		japones_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		japones_label.setBounds(432, 11, 252, 70);
+		eliminarPanel.add(japones_label);
+		
+		eliminar_button.addActionListener(e -> {
+			String esp = esp_jap ? lista_esp.getSelectedValue() : lista_jap.getSelectedValue();
+			String jap = esp_jap ? lista_jap.getSelectedValue() : lista_esp.getSelectedValue();
+			FileController.eliminar(jap, esp);
+			lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
+			try {
+				lista_jap.setModel(FileController.leer(esp_jap ? esp : jap));
+			} catch (FileNotFoundException | PalabraNoEncontradaException ex) {
+				lista_jap.setModel(new DefaultListModel<String>());
+			}
+		});
+		
+		switch_button.addActionListener(e -> {
+			String aux = espanol_label.getText();
+			espanol_label.setText(japones_label.getText());
+			japones_label.setText(aux);
+			esp_jap = !esp_jap;
+			lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
+			lista_jap.setModel(new DefaultListModel<String>());
+		});
+		
+		lista_esp.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					lista_jap.setModel(FileController.leer(lista_esp.getSelectedValue()));
+				} catch (PalabraNoEncontradaException e1) {
+					e1.printStackTrace();
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		lista_jap.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				eliminar_button.setEnabled(lista_esp.getSelectedValue() != null && lista_jap.getSelectedValue() != null);					
+			}
+		});
 	}
 
 	private JMenuBar createJMenuBar() {
