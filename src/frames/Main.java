@@ -79,18 +79,18 @@ public class Main extends JFrame {
 		traducirPanel.setLayout(null);
 		
 		JLabel traducir_label = new JLabel("Traducir: ");
-		traducir_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		traducir_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		traducir_label.setBounds(10, 19, 92, 20);
 		traducirPanel.add(traducir_label);
 		
 		JTextField input = new JTextField();
-		input.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		input.setFont(new Font("SansSerif", Font.BOLD, 25));
 		input.setHorizontalAlignment(SwingConstants.CENTER);
 		input.setBounds(107, 11, 361, 45);
 		traducirPanel.add(input);
 		
 		JButton traducir_button = new JButton("Traducir");
-		traducir_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		traducir_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		traducir_button.setBounds(524, 11, 160, 45);
 		traducirPanel.add(traducir_button);
 		
@@ -103,13 +103,13 @@ public class Main extends JFrame {
 		
 		JButton agregar_button = new JButton("Agregar");
 		agregar_button.addActionListener(e -> setVisiblePanel(agregarPanel));
-		agregar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		agregar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		agregar_button.setBounds(10, 483, 160, 45);
 		traducirPanel.add(agregar_button);
 		
 		JButton eliminar_button = new JButton("Eliminar");
 		eliminar_button.addActionListener(e -> setVisiblePanel(eliminarPanel));
-		eliminar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		eliminar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		eliminar_button.setBounds(524, 483, 160, 45);
 		traducirPanel.add(eliminar_button);
 		
@@ -159,42 +159,42 @@ public class Main extends JFrame {
 		contentPane.add(agregarPanel);
 		
 		JLabel espanol_label = new JLabel("Español");
-		espanol_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		espanol_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		espanol_label.setHorizontalAlignment(SwingConstants.CENTER);
 		espanol_label.setBounds(10, 58, 327, 26);
 		agregarPanel.add(espanol_label);
 		
 		JTextPane input_esp = new JTextPane();
-		input_esp.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		input_esp.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		input_esp.setBounds(0, 95, 342, 267);
 		agregarPanel.add(input_esp);
 		
 		JLabel japones_label = new JLabel("Japones");
 		japones_label.setHorizontalAlignment(SwingConstants.CENTER);
-		japones_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		japones_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		japones_label.setBounds(347, 58, 327, 26);
 		agregarPanel.add(japones_label);
 		
 		JTextPane input_jap = new JTextPane();
-		input_jap.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		input_jap.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		input_jap.setBounds(352, 95, 342, 267);
 		agregarPanel.add(input_jap);
 		
 		JLabel respuesta = new JLabel("");
-		respuesta.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		respuesta.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		respuesta.setHorizontalAlignment(SwingConstants.CENTER);
 		respuesta.setBounds(10, 388, 664, 80);
 		agregarPanel.add(respuesta);
 		
 		JButton agregar_button = new JButton("AGREGAR");
-		agregar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		agregar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		agregar_button.setBounds(524, 485, 160, 45);
 		agregarPanel.add(agregar_button);
 		
 		JButton atras_button = new JButton("ATRAS");
 		atras_button.setForeground(Color.WHITE);
 		atras_button.setBackground(Color.RED);
-		atras_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		atras_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
 		atras_button.setBounds(10, 485, 160, 45);
 		agregarPanel.add(atras_button);
@@ -268,19 +268,19 @@ public class Main extends JFrame {
 		contentPane.add(eliminarPanel);
 		
 		JList<String> lista_esp = new JList<String>();
-		lista_esp.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lista_esp.setFont(new Font("SansSerif", Font.BOLD, 25));
 		lista_esp.setBounds(0, 0, 1, 1);
 		lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
 		eliminarPanel.add(lista_esp);
 		
 		JList<String> lista_jap = new JList<String>();
-		lista_jap.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		lista_jap.setFont(new Font("SansSerif", Font.BOLD, 25));
 		lista_jap.setBounds(432, 81, 252, 393);
 		eliminarPanel.add(lista_jap);
 		
 		JButton eliminar_button = new JButton("ELIMINAR");
 		eliminar_button.setEnabled(false);
-		eliminar_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		eliminar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		eliminar_button.setBounds(524, 485, 160, 45);
 		eliminarPanel.add(eliminar_button);
 		
@@ -292,25 +292,25 @@ public class Main extends JFrame {
 		JButton atras_button = new JButton("ATRAS");
 		atras_button.setForeground(Color.WHITE);
 		atras_button.setBackground(Color.RED);
-		atras_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		atras_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
 		atras_button.setBounds(10, 485, 160, 45);
 		eliminarPanel.add(atras_button);
 		
 		JButton switch_button = new JButton("<-->");
-		switch_button.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		switch_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		switch_button.setBounds(267, 202, 160, 45);
 		eliminarPanel.add(switch_button);
 		
 		JLabel espanol_label = new JLabel("Español");
 		espanol_label.setHorizontalAlignment(SwingConstants.CENTER);
-		espanol_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		espanol_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		espanol_label.setBounds(10, 11, 252, 70);
 		eliminarPanel.add(espanol_label);
 		
 		JLabel japones_label = new JLabel("Japones");
 		japones_label.setHorizontalAlignment(SwingConstants.CENTER);
-		japones_label.setFont(new Font("Tahoma", Font.PLAIN, 21));
+		japones_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		japones_label.setBounds(432, 11, 252, 70);
 		eliminarPanel.add(japones_label);
 		
