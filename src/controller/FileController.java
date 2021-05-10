@@ -140,8 +140,15 @@ public class FileController {
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(temp, true), StandardCharsets.UTF_8));
 			String removeID = jap + ";" + esp;
 			String linea = "";
+			boolean deleted = false;
 			while((linea = bufferedReader.readLine()) != null) {
-				if(!linea.equalsIgnoreCase(removeID)) {
+				if(linea.equalsIgnoreCase(removeID)) {
+					if (!deleted) {
+						deleted = true;
+					} else {
+						bufferedWriter.write(linea + System.getProperty("line.separator"));												
+					}
+				} else {
 					bufferedWriter.write(linea + System.getProperty("line.separator"));
 				}
 			}
