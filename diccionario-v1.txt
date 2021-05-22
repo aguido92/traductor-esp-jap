@@ -16,3 +16,4 @@ JapRaul;Raul
 Rauljap2;Raul
 Puto en japones;Chyvo
 Puto en japones;Chyvo
+アルゼンチン;China (forma cortes)

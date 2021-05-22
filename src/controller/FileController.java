@@ -11,6 +11,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractList;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.ListModel;
@@ -33,7 +35,13 @@ public class FileController {
 	static Writer fileWriter;
 	static BufferedWriter bufferedWriter;
 
-	public static DefaultListModel<String> leer(String entrada) throws PalabraNoEncontradaException, FileNotFoundException {
+	/*
+	 * order=0 ==> recibo texto en JAP y devuelvo traducciones en ESP
+	 * order=1 ==> recibo texto en ESP y devuelvo traducciones en JAP
+	 */
+	public static DefaultListModel<String> leer(String entrada, int order) throws PalabraNoEncontradaException, FileNotFoundException {
+		boolean japToEsp = order == 0;
+		boolean espToJap = order == 1;
 		DefaultListModel<String> traducciones = new DefaultListModel<String>();
 		try {
 			if (!file.exists()) {
@@ -46,9 +54,9 @@ public class FileController {
 				String[] lineaArray = linea.split(";");
 				String japones = lineaArray[0];
 				String espanol = lineaArray[1];
-				if (entrada.equalsIgnoreCase((japones))) {
+				if (japToEsp && entrada.equalsIgnoreCase((japones))) {
 					traducciones.addElement(espanol);
-				} else if (entrada.equalsIgnoreCase(espanol)) {
+				} else if (espToJap && entrada.equalsIgnoreCase(espanol)) {
 					traducciones.addElement(japones);
 				}
 			}
@@ -78,7 +86,8 @@ public class FileController {
 		return traducciones;
 	}
 
-	public static ListModel<String> getAll(int order) {
+	public static ListModel<String> getAll(int value) {
+		int order = value == 0 ? 0 : 1;
 		DefaultListModel<String> list = new DefaultListModel<String>();
 		try {
 			fileReader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
@@ -178,5 +187,19 @@ public class FileController {
 				}
 			}
 		}
+	}
+	
+	public static List<String> asList(int order) {
+		final ListModel<String> todas_esp = getAll(order);
+		return new AbstractList<String>() {
+			@Override public String get(int index) {
+				return todas_esp.getElementAt(index);
+			}
+
+			@Override
+			public int size() {
+				return todas_esp.getSize();
+			}
+		};
 	}
 }

@@ -20,6 +20,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
@@ -29,6 +30,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.util.List;
 import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -36,12 +38,14 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JRadioButton;
 
 public class Main extends JFrame {
 
 	private static final long serialVersionUID = -1175581035221039000L;
 
 	private JPanel contentPane, traducirPanel, agregarPanel, eliminarPanel;
+	private JRadioButton radioButtonJap, radioButtonEsp;
 	private Boolean esp_jap = true;
 
 	public static void main(String[] args) {
@@ -83,6 +87,19 @@ public class Main extends JFrame {
 		traducir_label.setBounds(10, 19, 92, 20);
 		traducirPanel.add(traducir_label);
 		
+		radioButtonJap = new JRadioButton("Japones");
+		radioButtonJap.setBounds(10, 63, 109, 23);
+		radioButtonJap.setSelected(true);
+		traducirPanel.add(radioButtonJap);
+		
+		radioButtonEsp = new JRadioButton("Español");
+		radioButtonEsp.setBounds(143, 63, 109, 23);
+		traducirPanel.add(radioButtonEsp);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(radioButtonJap);
+		group.add(radioButtonEsp);
+		
 		JTextField input = new JTextField();
 		input.setFont(new Font("SansSerif", Font.BOLD, 25));
 		input.setHorizontalAlignment(SwingConstants.CENTER);
@@ -98,7 +115,7 @@ public class Main extends JFrame {
 		output.setFont(new Font("Arial", Font.BOLD, 25));
 		output.setBackground(UIManager.getColor("CheckBox.background"));
 		output.setEditable(false);
-		output.setBounds(227, 83, 447, 400);
+		output.setBounds(227, 93, 447, 390);
 		traducirPanel.add(output);
 		
 		JButton agregar_button = new JButton("Agregar");
@@ -116,7 +133,7 @@ public class Main extends JFrame {
 		traducir_button.addActionListener(e -> {
 			DefaultListModel<String> list;
 			try {
-				list = FileController.leer(input.getText());
+				list = FileController.leer(input.getText(), intValueOf(radioButtonEsp.isSelected()));
 				String traduccion = list.firstElement();
 				output.setForeground(Color.BLACK);
 				if (list.size() > 1) {
@@ -143,6 +160,27 @@ public class Main extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					traducir_button.doClick();
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode()!=KeyEvent.VK_BACK_SPACE && 
+						e.getKeyCode()!=KeyEvent.VK_DELETE &&
+						e.getKeyCode()!=KeyEvent.VK_CAPS_LOCK &&
+						e.getKeyCode()!=KeyEvent.VK_SHIFT &&
+						e.getKeyCode()!=KeyEvent.VK_ENTER) {
+					String entrada = input.getText();
+					Boolean idiomaJap = radioButtonJap.isSelected();
+					List<String> todas = FileController.asList(idiomaJap.compareTo(true));
+					for (String p : todas) {
+						if (p.startsWith(entrada)) {									
+							input.setText(p);
+							input.setSelectionStart(entrada.length());
+							input.setSelectionEnd(p.length());
+							break;
+						}
+					}
+					
 				}
 			}
 		});
@@ -320,7 +358,7 @@ public class Main extends JFrame {
 			FileController.eliminar(jap, esp);
 			lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
 			try {
-				lista_jap.setModel(FileController.leer(esp_jap ? esp : jap));
+				lista_jap.setModel(FileController.leer(esp_jap ? esp : jap, intValueOf(esp_jap)));					
 			} catch (FileNotFoundException | PalabraNoEncontradaException ex) {
 				lista_jap.setModel(new DefaultListModel<String>());
 			}
@@ -339,7 +377,7 @@ public class Main extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				try {
-					lista_jap.setModel(FileController.leer(lista_esp.getSelectedValue()));
+					lista_jap.setModel(FileController.leer(lista_esp.getSelectedValue(), intValueOf(esp_jap)));
 				} catch (PalabraNoEncontradaException e1) {
 					e1.printStackTrace();
 				} catch (FileNotFoundException e1) {
@@ -403,4 +441,9 @@ public class Main extends JFrame {
 		}
 		
 	}
+	
+	private int intValueOf(boolean b) {
+		return b ? 1 : 0;
+	}
+	
 }
