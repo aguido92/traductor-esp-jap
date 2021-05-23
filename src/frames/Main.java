@@ -68,66 +68,66 @@ public class Main extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(null);
 		setContentPane(contentPane);
-		
+
 		crearTraducirPanel();
 		crearAgregarPanel();
 		crearEliminarPanel();
 		setJMenuBar(createJMenuBar());
 	}
-	
+
 	private void crearTraducirPanel() {
 		traducirPanel = new JPanel();
 		traducirPanel.setBounds(0, 0, 694, 549);
 		traducirPanel.setLayout(null);
-		
+
 		JLabel traducir_label = new JLabel("Traducir: ");
 		traducir_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		traducir_label.setBounds(10, 19, 92, 20);
 		traducirPanel.add(traducir_label);
-		
+
 		radioButtonJap = new JRadioButton("Japones");
 		radioButtonJap.setBounds(10, 63, 109, 23);
 		radioButtonJap.setSelected(true);
 		traducirPanel.add(radioButtonJap);
-		
+
 		radioButtonEsp = new JRadioButton("Español");
 		radioButtonEsp.setBounds(143, 63, 109, 23);
 		traducirPanel.add(radioButtonEsp);
-		
+
 		ButtonGroup group = new ButtonGroup();
 		group.add(radioButtonJap);
 		group.add(radioButtonEsp);
-		
+
 		JTextField input = new JTextField();
 		input.setFont(new Font("SansSerif", Font.BOLD, 25));
 		input.setHorizontalAlignment(SwingConstants.CENTER);
 		input.setBounds(107, 11, 361, 45);
 		traducirPanel.add(input);
-		
+
 		JButton traducir_button = new JButton("Traducir");
 		traducir_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		traducir_button.setBounds(524, 11, 160, 45);
 		traducirPanel.add(traducir_button);
-		
+
 		JTextPane output = new JTextPane();
 		output.setFont(new Font("Arial", Font.BOLD, 25));
 		output.setBackground(UIManager.getColor("CheckBox.background"));
 		output.setEditable(false);
 		output.setBounds(227, 93, 447, 390);
 		traducirPanel.add(output);
-		
+
 		JButton agregar_button = new JButton("Agregar");
 		agregar_button.addActionListener(e -> setVisiblePanel(agregarPanel));
 		agregar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		agregar_button.setBounds(10, 483, 160, 45);
 		traducirPanel.add(agregar_button);
-		
+
 		JButton eliminar_button = new JButton("Eliminar");
 		eliminar_button.addActionListener(e -> setVisiblePanel(eliminarPanel));
 		eliminar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		eliminar_button.setBounds(524, 483, 160, 45);
 		traducirPanel.add(eliminar_button);
-		
+
 		traducir_button.addActionListener(e -> {
 			DefaultListModel<String> list;
 			try {
@@ -152,40 +152,34 @@ public class Main extends JFrame {
 				ex1.printStackTrace();
 			}
 		});
-		
+
 		input.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyPressed(KeyEvent e) {
+			public void keyReleased(KeyEvent e) {
+				System.out.println(KeyEvent.getKeyText(e.getKeyCode()));
+				// Presionar Enter para accionar el boton de traducir
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					traducir_button.doClick();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode()!=KeyEvent.VK_BACK_SPACE && 
-						e.getKeyCode()!=KeyEvent.VK_DELETE &&
-						e.getKeyCode()!=KeyEvent.VK_CAPS_LOCK &&
-						e.getKeyCode()!=KeyEvent.VK_SHIFT &&
-						e.getKeyCode()!=KeyEvent.VK_ENTER) {
+				} else if (e.getKeyCode()!=KeyEvent.VK_BACK_SPACE && // Presiona boton borrar
+						e.getKeyCode()!=KeyEvent.VK_DELETE && // Presiona boton delete/supr
+						e.getKeyCode()!=KeyEvent.VK_CAPS_LOCK && // Presiona boton CapsLock/Mayus
+						e.getKeyCode()!=KeyEvent.VK_SHIFT) { // Presiona boton shift
 					String entrada = input.getText();
-					Boolean idiomaJap = radioButtonJap.isSelected();
-					List<String> todas = FileController.asList(idiomaJap.compareTo(true));
-					for (String p : todas) {
-						if (p.startsWith(entrada)) {									
-							input.setText(p);
-							input.setSelectionStart(entrada.length());
-							input.setSelectionEnd(p.length());
-							break;
-						}
-					}
-					
+					List<String> todas = FileController.asList(intValueOf(radioButtonEsp.isSelected()));
+					todas.stream().filter(p -> p.startsWith(entrada))
+					.findFirst()
+					.ifPresent(p -> {
+						input.setText(p);
+						input.setSelectionStart(entrada.length());
+						input.setSelectionEnd(p.length());
+					});
 				}
 			}
 		});
-		
+
 		contentPane.add(traducirPanel);
 	}
-	
+
 	private void crearAgregarPanel() {
 		agregarPanel = new JPanel();
 		agregarPanel.setBounds(0, 0, 694, 549);
@@ -193,40 +187,40 @@ public class Main extends JFrame {
 		agregarPanel.setLayout(null);
 		agregarPanel.setVisible(false);
 		contentPane.add(agregarPanel);
-		
+
 		JLabel espanol_label = new JLabel("Español");
 		espanol_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		espanol_label.setHorizontalAlignment(SwingConstants.CENTER);
 		espanol_label.setBounds(10, 58, 327, 26);
 		agregarPanel.add(espanol_label);
-		
+
 		JTextPane input_esp = new JTextPane();
 		input_esp.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		input_esp.setBounds(0, 95, 342, 267);
 		agregarPanel.add(input_esp);
-		
+
 		JLabel japones_label = new JLabel("Japones");
 		japones_label.setHorizontalAlignment(SwingConstants.CENTER);
 		japones_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		japones_label.setBounds(347, 58, 327, 26);
 		agregarPanel.add(japones_label);
-		
+
 		JTextPane input_jap = new JTextPane();
 		input_jap.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		input_jap.setBounds(352, 95, 342, 267);
 		agregarPanel.add(input_jap);
-		
+
 		JLabel respuesta = new JLabel("");
 		respuesta.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		respuesta.setHorizontalAlignment(SwingConstants.CENTER);
 		respuesta.setBounds(10, 388, 664, 80);
 		agregarPanel.add(respuesta);
-		
+
 		JButton agregar_button = new JButton("AGREGAR");
 		agregar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		agregar_button.setBounds(524, 485, 160, 45);
 		agregarPanel.add(agregar_button);
-		
+
 		JButton atras_button = new JButton("ATRAS");
 		atras_button.setForeground(Color.WHITE);
 		atras_button.setBackground(Color.RED);
@@ -234,7 +228,7 @@ public class Main extends JFrame {
 		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
 		atras_button.setBounds(10, 485, 160, 45);
 		agregarPanel.add(atras_button);
-		
+
 		input_esp.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new ChangeFocusInputAction(input_jap));
 		input_esp.addKeyListener(new KeyAdapter() {
 			@Override
@@ -250,13 +244,13 @@ public class Main extends JFrame {
 			public void focusLost(FocusEvent e) {
 				input_esp.setText(input_esp.getText().replace("\r\n", ""));
 			}
-			
+
 			@Override
 			public void focusGained(FocusEvent e) {
 				input_esp.setText(input_esp.getText().replace("\r\n", ""));
 			}
 		});
-		
+
 		input_jap.getInputMap().put(KeyStroke.getKeyStroke("TAB"), new ChangeFocusInputAction(input_esp));
 		input_jap.addKeyListener(new KeyAdapter() {
 			@Override
@@ -295,36 +289,36 @@ public class Main extends JFrame {
 			}
 		});
 	}
-	
+
 	private void crearEliminarPanel() {
 		eliminarPanel = new JPanel();
 		eliminarPanel.setLayout(null);
 		eliminarPanel.setBounds(0, 0, 694, 549);
 		eliminarPanel.setVisible(false);
 		contentPane.add(eliminarPanel);
-		
+
 		JList<String> lista_esp = new JList<String>();
 		lista_esp.setFont(new Font("SansSerif", Font.BOLD, 25));
 		lista_esp.setBounds(0, 0, 1, 1);
 		lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
 		eliminarPanel.add(lista_esp);
-		
+
 		JList<String> lista_jap = new JList<String>();
 		lista_jap.setFont(new Font("SansSerif", Font.BOLD, 25));
 		lista_jap.setBounds(432, 81, 252, 393);
 		eliminarPanel.add(lista_jap);
-		
+
 		JButton eliminar_button = new JButton("ELIMINAR");
 		eliminar_button.setEnabled(false);
 		eliminar_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		eliminar_button.setBounds(524, 485, 160, 45);
 		eliminarPanel.add(eliminar_button);
-		
+
 		JScrollPane scrollPane = new JScrollPane(lista_esp);
 		scrollPane.setBorder(null);
 		scrollPane.setBounds(10, 81, 252, 393);
 		eliminarPanel.add(scrollPane);
-		
+
 		JButton atras_button = new JButton("ATRAS");
 		atras_button.setForeground(Color.WHITE);
 		atras_button.setBackground(Color.RED);
@@ -332,24 +326,24 @@ public class Main extends JFrame {
 		atras_button.addActionListener(e -> setVisiblePanel(traducirPanel));
 		atras_button.setBounds(10, 485, 160, 45);
 		eliminarPanel.add(atras_button);
-		
+
 		JButton switch_button = new JButton("<-->");
 		switch_button.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		switch_button.setBounds(267, 202, 160, 45);
 		eliminarPanel.add(switch_button);
-		
+
 		JLabel espanol_label = new JLabel("Español");
 		espanol_label.setHorizontalAlignment(SwingConstants.CENTER);
 		espanol_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		espanol_label.setBounds(10, 11, 252, 70);
 		eliminarPanel.add(espanol_label);
-		
+
 		JLabel japones_label = new JLabel("Japones");
 		japones_label.setHorizontalAlignment(SwingConstants.CENTER);
 		japones_label.setFont(new Font("SansSerif", Font.PLAIN, 21));
 		japones_label.setBounds(432, 11, 252, 70);
 		eliminarPanel.add(japones_label);
-		
+
 		eliminar_button.addActionListener(e -> {
 			String esp = esp_jap ? lista_esp.getSelectedValue() : lista_jap.getSelectedValue();
 			String jap = esp_jap ? lista_jap.getSelectedValue() : lista_esp.getSelectedValue();
@@ -361,7 +355,7 @@ public class Main extends JFrame {
 				lista_jap.setModel(new DefaultListModel<String>());
 			}
 		});
-		
+
 		switch_button.addActionListener(e -> {
 			String aux = espanol_label.getText();
 			espanol_label.setText(japones_label.getText());
@@ -370,7 +364,7 @@ public class Main extends JFrame {
 			lista_esp.setModel(FileController.getAll(esp_jap.compareTo(false)));
 			lista_jap.setModel(new DefaultListModel<String>());
 		});
-		
+
 		lista_esp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -383,7 +377,7 @@ public class Main extends JFrame {
 				}
 			}
 		});
-		
+
 		lista_jap.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
@@ -398,36 +392,36 @@ public class Main extends JFrame {
 		menuBar.setBounds(5, 5, 674, 22);
 		JMenu menu = new JMenu("Menu");
 		menuBar.add(menu);
-		
+
 		JMenuItem traducirItem = new JMenuItem("Traducir");
 		traducirItem.addActionListener(e -> setVisiblePanel(traducirPanel));
 		menu.add(traducirItem);
-		
+
 		JMenuItem agregarItem = new JMenuItem("Agregar");
 		agregarItem.addActionListener(e -> setVisiblePanel(agregarPanel));
 		menu.add(agregarItem);
-		
+
 		JMenuItem eliminarItem = new JMenuItem("Eliminar");
 		eliminarItem.addActionListener(e -> setVisiblePanel(eliminarPanel));
 		menu.add(eliminarItem);
-		
+
 		JMenuItem salirItem = new JMenuItem("Salir");
 		salirItem.addActionListener(e -> System.exit(0));
 		menu.add(salirItem);
 		return menuBar;
 	}
-	
+
 	private void setVisiblePanel(JPanel panel) {
 		getContentPane().setVisible(false);
 		setContentPane(panel);
 		panel.setVisible(true);
 	}
-	
+
 	private class ChangeFocusInputAction extends AbstractAction {
 		private static final long serialVersionUID = -5219955235297262325L;
 
 		private JTextPane textPane;
-		
+
 		public ChangeFocusInputAction(JTextPane textPane) {
 			super();
 			this.textPane = textPane;
@@ -437,11 +431,11 @@ public class Main extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			textPane.requestFocus();
 		}
-		
+
 	}
-	
+
 	private int intValueOf(boolean b) {
 		return b ? 1 : 0;
 	}
-	
+
 }
